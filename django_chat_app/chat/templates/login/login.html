@@ -55,58 +55,49 @@ form {
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header header">
       <div class="mdl-layout__header-row">
-        {% if request.user.is_authenticated%}
+        {% if request.user.is_authenticated %}
         <span class="mdl-layout-title">Welcome {{request.user.first_name}} !</span>
         {% else %}
         <span class="mdl-layout-title">Please log in!</span>
         <!-- Title -->
-        {%endif%}
+        {% endif %}
         <!-- Add spacer, to align navigation to the right -->
         <div class="mdl-layout-spacer"></div>
         <!-- Navigation. We hide it in small screens. -->
-        {% comment %} <nav class="mdl-navigation mdl-layout--large-screen-only">
-          <a class="mdl-navigation__link" href="">Link</a>
-          <a class="mdl-navigation__link" href="">Link</a>
-          <a class="mdl-navigation__link" href="">Link</a>
-          <a class="mdl-navigation__link" href="">Link</a>
-        </nav> {% endcomment %}
       </div>
     </header>
     <div class="mdl-layout__drawer mydrawer">
       <span class="mdl-layout-title">Title</span>
+     
     </div>
     <main class="mdl-layout__content">
       <div class="page-content"><!-- Accent-colored raised button with ripple -->
-        {% if request.user.is_authenticated%}
-        <!-- For Schleife in Django-->
-        <div class="message-box">
-        {%for message in messages%}
-        <span><span class="message-date">[{{message.created_at}}]</span><b>{{message.author}}</b>: {{message.text}}</span>
-        {%endfor%}
-      </div>
-         <!-- For Schleife in Django-->
-          <!-- For Schleife in Django-->
-      
-        <form action="/chat/" method="post">
-          {% csrf_token %}
-            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-              <input class="mdl-textfield__input" name="textmessage" type="text" id="sample3">
-              <label class="mdl-textfield__label" for="sample3">Your message...</label>
-            </div>
-            <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-                Send
-               </button>
-          </form>
-          {% else %}
-        <div>
-          
-          <p style="margin-top:200px;">
-            Du bist aktuell nicht eingeloggt. <a href="/login/"><b>Login</b></a>
-          </p>
 
-        </div>
+        <form action="/login/" method="POST">
+            {% csrf_token %}
+            {% if wrongPassword %}
+        <span style="color:red;">Wrong Password ! Please try again</span>
+     {% endif %}
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" name="username" type="text" id="sample1">
+                <label class="mdl-textfield__label" for="sample1">Username</label>
+              </div>
+
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" name="password" type="password" id="sample2">
+                <label class="mdl-textfield__label" for="sample2">Password</label>
+              </div>
+              <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
+               Login
+                 </button>
+            </form>
         
-          {% endif %}
+    
+
+      
+        
+    
+    
         </div>
     </main>
   </div>
