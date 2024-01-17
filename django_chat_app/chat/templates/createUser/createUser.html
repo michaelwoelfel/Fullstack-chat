@@ -1,4 +1,5 @@
-
+{% extends "base.html" %}
+{% block content %}
 <style>
 .header {
    display: flex;
@@ -71,24 +72,31 @@ form {
     <main class="mdl-layout__content">
       <div class="page-content"><!-- Accent-colored raised button with ripple -->
 
-        <form action="/login/" method="POST">
+        <form action="/createUser/" method="POST">
             {% csrf_token %}
-            {% if wrongPassword %}
-        <span style="color:red;">Wrong Password ! Please try again</span>
-     {% endif %}
+            {% csrf_token %}
+             {% if password_error %}
+             <span style="color:red;">{{ password_error }}</span> <!-- Display password error -->
+             {% endif %}
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" name="username" type="text" id="sample1">
+                <input class="mdl-textfield__input" name="newUser" type="text" id="sample1">
                 <label class="mdl-textfield__label" for="sample1">Username</label>
               </div>
 
               <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                <input class="mdl-textfield__input" name="password" type="password" id="sample2">
+                <input class="mdl-textfield__input" name="newPassword" type="password" id="sample2">
                 <label class="mdl-textfield__label" for="sample2">Password</label>
               </div>
+
+              <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" name="newPasswordValidation" type="password" id="sample2">
+                <label class="mdl-textfield__label" for="sample2"> Repeat Password</label>
+              </div>
               <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
-               Login
+              Register User
                  </button>
             </form>
         </div>
     </main>
   </div>
+  {% endblock %}
