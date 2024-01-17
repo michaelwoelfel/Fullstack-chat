@@ -1,6 +1,5 @@
-<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.red-pink.min.css" />
-<script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+{% extends "base.html" %}
+{% block content %}
 <style>
 .header {
    display: flex;
@@ -104,9 +103,15 @@ form {
             Du bist aktuell nicht eingeloggt. <a href="/login/"><b>Login</b></a>
           </p>
 
+          <p style="margin-top:200px;">
+            Noch kein Account ? <a href="/createUser/"><b>Account erstellen</b></a>
+          </p>
+
         </div>
         
           {% endif %}
         </div>
     </main>
   </div>
+
+  {% endblock %}
