@@ -4,6 +4,11 @@ from django.http import HttpResponseRedirect
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
+from django.http import JsonResponse
+from django.core import serializers
+from django.forms.models import model_to_dict
+import json
+
 
 # Erstelle deine Views hier.
 @login_required(login_url='/login/')  # Dekorator, der den Zugang zu dieser View auf eingeloggte Nutzer beschränkt
@@ -12,9 +17,16 @@ def index(request):
         print("Received Data" + request.POST['textmessage'])  # Gibt die empfangenen Daten in der Konsole aus
         myChat = Chat.objects.get(id=1)  # Holt den Chat mit der ID 1 aus der Datenbank
         # Erstellt eine neue Nachricht mit den Daten aus dem POST-Request
-        Message.objects.create(text=request.POST['textmessage'], chat=myChat, author=request.user, receiver=request.user)
+        new_message = Message.objects.create(text=request.POST['textmessage'], 
+                                             chat=myChat, 
+                                             author=request.user,
+                                             receiver=request.user)
+        message_data = model_to_dict(new_message)
+       
+        return JsonResponse({'model': 'chat.message', 'pk': new_message.pk, 'fields': message_data})
     chatMessages = Message.objects.filter(chat__id=1)  # Holt alle Nachrichten des Chats mit der ID 1
     # Gibt die index.html zurück und übergibt die Nachrichten
+    
     return render(request, 'chat/index.html', {'messages': chatMessages})
 
 def login_view(request):

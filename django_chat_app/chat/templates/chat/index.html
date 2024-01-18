@@ -1,9 +1,49 @@
 {% extends "base.html" %}
 {% block content %}
-<style>
 
-</style>
+<script>
 
+  
+  async function sendMessage(event) {
+    event.preventDefault(); 
+    let token = '{{ csrf_token }}';
+    let formData = new FormData();
+    formData.append('textmessage', messageField.value);
+    formData.append('csrfmiddlewaretoken', token);
+    try {
+      
+      messageContainer.innerHTML += `
+      <span id="removeMessage" style="color:grey;"><span class="message-date">Datum</span><b>Date</b>: ${messageField.value}</span>`;
+
+  let response =  await fetch('/chat/', {
+      method: 'POST',
+      body: formData,
+    });
+    let json = await response.json();
+    console.log(json);
+    console.log(json.model)
+   
+   
+   
+    renderNewMessage();
+  } catch(e) {
+    console.error('An error occured', e)
+  }
+
+ 
+  }
+
+
+
+  function renderNewMessage() {
+    const elem = document.getElementById("removeMessage")
+    elem.remove();
+    currentDate = new Date(Date.now()).toLocaleString();
+    messageContainer.innerHTML += `
+    <span><span class="message-date">[${currentDate}]</span><b></b><b>{{request.user.first_name}}</b>: ${messageField.value}</span>`
+  }
+  
+   </script>
 <!-- Always shows a header, even in smaller screens. -->
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
     <header class="mdl-layout__header header">
@@ -25,26 +65,23 @@
         </nav> {% endcomment %}
       </div>
     </header>
-    <div class="mdl-layout__drawer mydrawer">
-      <span class="mdl-layout-title">Title</span>
-    </div>
+   
     <main class="mdl-layout__content">
       <div class="page-content"><!-- Accent-colored raised button with ripple -->
         {% if request.user.is_authenticated%}
         <!-- For Schleife in Django-->
-        <div class="message-box">
+        <div class="message-box" id="messageContainer">
         {%for message in messages%}
         <span><span class="message-date">[{{message.created_at}}]</span><b>{{message.author}}</b>: {{message.text}}</span>
         {%endfor%}
       </div>
          <!-- For Schleife in Django-->
           <!-- For Schleife in Django-->
-      
-        <form action="/chat/" method="post">
+        <form onsubmit="sendMessage(event)" method="post">
           {% csrf_token %}
             <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-              <input class="mdl-textfield__input" name="textmessage" type="text" id="sample3">
-              <label class="mdl-textfield__label" for="sample3">Your message...</label>
+              <input class="mdl-textfield__input" name="textmessage" type="text" id="messageField">
+              <label class="mdl-textfield__label" for="messageField">Your message...</label>
             </div>
             <button class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">
                 Send
@@ -52,20 +89,15 @@
           </form>
           {% else %}
         <div>
-          
-          <p style="margin-top:200px;">
+          <p style="margin-top:200px">
             Du bist aktuell nicht eingeloggt. <a href="/login/"><b>Login</b></a>
           </p>
-
           <p style="margin-top:200px;">
             Noch kein Account ? <a href="/createUser/"><b>Account erstellen</b></a>
           </p>
-
         </div>
-        
           {% endif %}
         </div>
     </main>
   </div>
-
   {% endblock %}
