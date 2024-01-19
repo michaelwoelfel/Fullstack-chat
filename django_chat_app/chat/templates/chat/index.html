@@ -13,7 +13,7 @@
     try {
       
       messageContainer.innerHTML += `
-      <span id="removeMessage" style="color:grey;"><span class="message-date">Datum</span><b>Date</b>: ${messageField.value}</span>`;
+      <span class="message" id="removeMessage" style="color:grey;"><span class="message-date">Datum</span><b>Date</b>: ${messageField.value}</span>`;
 
   let response =  await fetch('/chat/', {
       method: 'POST',
@@ -40,7 +40,7 @@
     elem.remove();
     currentDate = new Date(Date.now()).toLocaleString();
     messageContainer.innerHTML += `
-    <span><span class="message-date">[${currentDate}]</span><b></b><b>{{request.user.first_name}}</b>: ${messageField.value}</span>`
+    <span class="message"><span class="message-date">[${currentDate}]</span><b></b><b>{{request.user.first_name}}</b>: ${messageField.value}</span>`
   }
   
    </script>
@@ -72,7 +72,7 @@
         <!-- For Schleife in Django-->
         <div class="message-box" id="messageContainer">
         {%for message in messages%}
-        <span><span class="message-date">[{{message.created_at}}]</span><b>{{message.author}}</b>: {{message.text}}</span>
+        <span class="message {% if message.author == request.user %} sentByUser {% endif %}"><span class="message-date">[{{message.created_at}}]</span><b>{{message.author}}</b>: {{message.text}}</span>
         {%endfor%}
       </div>
          <!-- For Schleife in Django-->
