@@ -7,9 +7,14 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 from django.core import serializers
 from django.forms.models import model_to_dict
+from django.contrib.auth import logout
 import json
 
 
+
+"""
+This is the function where you get after the login. The chat room where all messages are rendered.
+"""
 # Erstelle deine Views hier.
 @login_required(login_url='/login/')  # Dekorator, der den Zugang zu dieser View auf eingeloggte Nutzer beschränkt
 def index(request):
@@ -29,6 +34,10 @@ def index(request):
     
     return render(request, 'chat/index.html', {'messages': chatMessages})
 
+
+"""
+This is the login_view where you have a login mask to login or create a new user.
+"""
 def login_view(request):
     redirect = request.GET.get('next', '/chat/')  # Holt den 'next' Parameter aus dem GET-Request oder setzt '/chat/' als Standard
     if request.method == 'POST':  # Überprüft, ob die Anfrage eine POST-Anfrage ist
@@ -44,16 +53,19 @@ def login_view(request):
     # Gibt das Login-Template zurück, falls keine POST-Anfrage vorliegt
     return render(request, 'login/login.html', {'redirect': redirect})
 
+
+
+"""
+This is the create_User view where a new user can be created.
+"""
 def createUser_view(request):
     context = {}  # Initialisiert einen Kontext-Dictionary
     if request.method == 'POST':  # Überprüft, ob die Anfrage eine POST-Anfrage ist
         username = request.POST.get('newUser')  # Holt den Benutzernamen aus dem POST-Request
         password = request.POST.get('newPassword')  # Holt das Passwort aus dem POST-Request
         password_validation = request.POST.get('newPasswordValidation')  # Holt die Passwort-Validierung aus dem POST-Request
-
         if password != password_validation: 
              context['password_error'] = "Passwörter stimmen nicht überein"
-           
         else:
              # Überprüfen, ob der Benutzername bereits existiert
           if User.objects.filter(username=username).exists():
@@ -63,3 +75,8 @@ def createUser_view(request):
            return redirect('/login/') 
     # Gibt das createUser-Template zurück
     return render(request, 'createUser/createUser.html', context)
+
+
+def logout_view(request):
+    logout(request)
+    return redirect('/login/')
