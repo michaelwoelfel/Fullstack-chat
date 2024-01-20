@@ -14,6 +14,7 @@ import json
 
 """
 This is the function where you get after the login. The chat room where all messages are rendered.
+
 """
 # Erstelle deine Views hier.
 @login_required(login_url='/login/')  # Dekorator, der den Zugang zu dieser View auf eingeloggte Nutzer beschränkt
@@ -37,6 +38,7 @@ def index(request):
 
 """
 This is the login_view where you have a login mask to login or create a new user.
+
 """
 def login_view(request):
     redirect = request.GET.get('next', '/chat/')  # Holt den 'next' Parameter aus dem GET-Request oder setzt '/chat/' als Standard
@@ -57,6 +59,7 @@ def login_view(request):
 
 """
 This is the create_User view where a new user can be created.
+
 """
 def createUser_view(request):
     context = {}  # Initialisiert einen Kontext-Dictionary
